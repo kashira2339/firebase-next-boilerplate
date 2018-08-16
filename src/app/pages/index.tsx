@@ -1,10 +1,12 @@
+import Link from 'next/link'
 import React, { Component } from 'react'
 import App from '../components/App'
-import { listenAuthStateChange, signIn, signOut, signUp } from '../service/auth'
+import { listenAuthStateChange, signOut } from '../service/auth'
+import { getUsers } from '../service/user'
 
-export default class Index extends Component<{}, { user?: any; email?: string; password?: string }> {
+export default class Index extends Component<{ pathname: any }, { user?: any; users?: any[] }> {
   public static async getInitialProps({ req, query }) {
-    console.log(req)
+    console.log(req, query)
     return {}
   }
 
@@ -16,54 +18,55 @@ export default class Index extends Component<{}, { user?: any; email?: string; p
   public componentDidMount() {
     listenAuthStateChange(s => {
       this.setState({
+        ...this.state,
         user: s
+      })
+      getUsers().then(users => {
+        this.setState({
+          ...this.state,
+          users: users.filter(user => user.uid !== s.uid)
+        })
       })
     })
   }
 
-  public signUp() {
-    const { email = '', password = '' } = this.state
-    signUp({ email, password })
-      .then(() => this.setState({ email: undefined, password: undefined }))
-      .catch(e => alert(e.message))
-  }
-
-  public signIn() {
-    const { email = '', password = '' } = this.state
-    signIn({ email, password })
-      .then(() => this.setState({ email: undefined, password: undefined }))
-      .catch(e => alert(e.message))
-  }
-
   public render() {
-    const u = this.state.user
+    const user = this.state.user
+    const users = this.state.users || []
+    const pathname = this.props.pathname
     return (
       <App>
-        {u ? (
+        {user ? (
           <React.Fragment>
             <button onClick={() => signOut()}>sign out</button>
             <dl>
+              <dt>name</dt>
+              <dd>{user.displayName}</dd>
               <dt>uid</dt>
-              <dd>{u.uid}</dd>
+              <dd>{user.uid}</dd>
               <dt>email</dt>
-              <dd>{u.email}</dd>
+              <dd>{user.email}</dd>
               <dt>refreshToken</dt>
-              <dd>{u.refreshToken}</dd>
+              <dd>{user.refreshToken}</dd>
             </dl>
+            <hr />
+            <h3>other user</h3>
+            <ul>
+              {users.map(u => {
+                return <li key={u.uid}>{u.name}</li>
+              })}
+            </ul>
           </React.Fragment>
         ) : (
           <React.Fragment>
-            <label>
-              email <input type={'email'} onChange={e => this.setState({ ...this.state, email: e.target.value })} />
-            </label>
+            <h2>choose signup or signin</h2>
+            <Link href={'/signup'}>
+              <a className={pathname === '/signup' ? 'is-active' : ''}>Sign Up</a>
+            </Link>
             &nbsp;
-            <label>
-              password{' '}
-              <input type={'password'} onChange={e => this.setState({ ...this.state, password: e.target.value })} />
-            </label>
-            <br />
-            <button onClick={() => this.signUp()}>sign up</button>
-            <button onClick={() => this.signIn()}>sign in</button>
+            <Link href={'/signin'}>
+              <a className={pathname === '/signin' ? 'is-active' : ''}>Sign In</a>
+            </Link>
           </React.Fragment>
         )}
       </App>

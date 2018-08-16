@@ -1,8 +1,13 @@
 import { auth, Auth } from '../config/firebase'
+import { addUser } from './user'
 
 interface IAuth {
   email: string
   password: string
+}
+
+interface ISignUp extends IAuth {
+  nickname: string
 }
 
 export function listenAuthStateChange(listener) {
@@ -11,8 +16,10 @@ export function listenAuthStateChange(listener) {
   })
 }
 
-export async function signUp({ email, password }: IAuth): Promise<any> {
-  return auth.createUserWithEmailAndPassword(email, password)
+export async function signUp({ nickname, email, password }: ISignUp): Promise<any> {
+  const user = await auth.createUserWithEmailAndPassword(email, password)
+  user.updateProfile({ displayName: nickname })
+  return addUser({ uid: user.uid, name: nickname })
 }
 
 export async function signIn({ email, password }: IAuth): Promise<any> {
