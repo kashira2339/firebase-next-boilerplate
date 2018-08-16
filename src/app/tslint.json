@@ -1,0 +1,9 @@
+{
+  "extends": ["prettier", "tslint:latest", "tslint-react"],
+  "rules": {
+    "quotemark": [true, "single"],
+    "no-submodule-imports": false,
+    "semicolon": true,
+    "no-console": false
+  }
+}
