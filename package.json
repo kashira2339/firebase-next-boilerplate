@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Host Next.js SSR app on Firebase Cloud Functions with Firebase Hosting redirects.",
   "scripts": {
-    "dev": "next src/app",
+    "dev": "cd \"src/app\" && node server.js",
     "preserve": "npm run clean && npm run build-all",
     "serve": "NODE_ENV=production firebase serve --only functions,hosting",
     "deploy": "firebase deploy",
@@ -19,6 +19,7 @@
     "install-deps": "cd \"dist/functions\" && npm i"
   },
   "dependencies": {
+    "@babel/runtime": "^7.0.0-rc.1",
     "@zeit/next-typescript": "^1.1.0",
     "dotenv-webpack": "^1.5.7",
     "firebase": "^4.13.1",

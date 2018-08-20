@@ -1,5 +1,5 @@
 {
-  "extends": ["prettier", "tslint:latest", "tslint-react"],
+  "extends": ["prettier"],
   "rules": {
     "quotemark": [true, "single"],
     "no-submodule-imports": false,

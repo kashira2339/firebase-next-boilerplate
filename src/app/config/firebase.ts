@@ -1,6 +1,7 @@
 import firebase from 'firebase'
 import 'firebase/auth'
 import 'firebase/firestore'
+import 'firebase/messaging'
 
 const options = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -11,9 +12,7 @@ const options = {
   storageBucket: process.env.FIREBASE_STORAGE_BUCKET
 }
 
-export const app: firebase.app.App = !firebase.apps.length
-  ? firebase.initializeApp(options)
-  : firebase.app()
+export const app: firebase.app.App = !firebase.apps.length ? firebase.initializeApp(options) : firebase.app()
 
 console.log(app.options)
 

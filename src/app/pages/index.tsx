@@ -3,10 +3,10 @@ import React, { Component } from 'react'
 import App from '../components/App'
 import { listenAuthStateChange, signOut } from '../service/auth'
 import { getUsers } from '../service/user'
+import { getToken} from '../service/push'
 
 export default class Index extends Component<{ pathname: any }, { user?: any; users?: any[] }> {
-  public static async getInitialProps({ req, query }) {
-    console.log(req, query)
+  public static async getInitialProps({ /* req, query */ }) {
     return {}
   }
 
@@ -38,6 +38,8 @@ export default class Index extends Component<{ pathname: any }, { user?: any; us
       <App>
         {user ? (
           <React.Fragment>
+            <button onClick={() => getToken()}>push token</button>
+            &nbsp;
             <button onClick={() => signOut()}>sign out</button>
             <dl>
               <dt>name</dt>
